@@ -8,16 +8,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SS
 {
     public partial class Form1 : Form
     {
+        string version = "v1.0\n2024年1月11日配布";
 
+        //起動時
         public Form1()
         {
             InitializeComponent();
+            //プルダウンリストの一番目を入れておく
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
 
@@ -26,31 +28,33 @@ namespace SS
             //デバイス名が表示されるようにする
             this.comboBox3.DisplayMember = "DeviceName";
             this.comboBox3.DataSource = Screen.AllScreens;
-            GetAllDisplayInformation();
         }
 
-
-
-
+        //起動ボタンを押した
         private void button1_Click(object sender, EventArgs e)
         {
+            //ウィンドウを作る
             Move move = new Move();
 
             try
             {
+                //入れられたパスから画像を作る
                 var bmp = new Bitmap(this.textBox1.Text);
                 Debug.WriteLine(String.Format("水平分解能 = {0}, 垂直分解能 = {1}", bmp.Height, bmp.Width));
+                //画像に対応したウィンドウサイズを指定
                 move.WindowSize(bmp.Width, bmp.Height);
-
+                //画像とエフェクト指定を送る
                 move.SetImage(this.textBox1.Text, comboBox2.SelectedIndex);
-
+                //最前面指定があればそうする
                 move.TopMost = checkBox_top.Checked;
 
                 //フォームを表示するディスプレイのScreenを取得する
                 Screen s = (Screen)this.comboBox3.SelectedItem;
-                Debug.WriteLine(s.Bounds.X+":"+s.Bounds.Y);
+                Debug.WriteLine(s.Bounds.X + ":" + s.Bounds.Y);
+                //位置を左上にさせる
                 move.Top = s.Bounds.Y;
-                move.Left=s.Bounds.X;
+                move.Left = s.Bounds.X;
+                //起動
                 move.Show();
             }
             catch (Exception ex)
@@ -65,8 +69,11 @@ namespace SS
 
         //参考
         //https://nomux2.net/dialog/
+        //
+        //画像パスを指定するボタン
         private void button2_Click(object sender, EventArgs e)
         {
+            //ファイルを開く
             using (OpenFileDialog dlg = new OpenFileDialog())
             {
                 //初期フォルダ(マイピクチャ)
@@ -81,14 +88,16 @@ namespace SS
                 //ダイアログを開く
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
+                    //一旦テキストボックスに反映
                     this.textBox1.Text = dlg.FileName;
                 }
             }
         }
 
+        //メニューバーにあるディスプレイ情報
         private void ディスプレイ情報ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(GetAllDisplayInformation(), "ディスプレイ情報");
+            MessageBox.Show(GetAllDisplayInformation(), "ディスプレイ情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /// <summary>
@@ -97,7 +106,6 @@ namespace SS
         /// </summary>
         private string GetAllDisplayInformation()
         {
-            string displayMainTitle = "";
             string displayDeviceName = "";
             string displayBoundsX = "";
             string displayBoundsWidth = "";
@@ -108,7 +116,6 @@ namespace SS
 
             try
             {
-                displayMainTitle = "-----\n●全てのディスプレイの情報";
                 foreach (System.Windows.Forms.Screen screen_data in System.Windows.Forms.Screen.AllScreens)
                 {
                     displayDeviceName = "\nデバイス名 : " + screen_data.DeviceName;
@@ -119,14 +126,29 @@ namespace SS
                     displayEnd = "\n-----";
 
                     messages += displayDeviceName + displayBoundsX + displayBoundsWidth + displayWorkingAreaX + displayWorkingAreaWidth + displayEnd;
-
                 }
             }
             catch
             {
 
             }
-            return displayMainTitle + messages;
+            return "-----" + messages;
+        }
+
+        private void バージョン情報ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(version, "バージョン情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            using (FontDialog fd = new FontDialog())
+            {
+                if (fd.ShowDialog() == DialogResult.OK)
+                {
+                    
+                }
+            }
         }
     }
 }

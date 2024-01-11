@@ -53,6 +53,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 281);
             this.Controls.Add(this.pictureBox);
+            this.MaximizeBox = false;
             this.Name = "Move";
             this.Text = "Move";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();

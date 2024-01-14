@@ -182,6 +182,12 @@ namespace SS
             //クリックしていない間動き続ける
             while (!click)
             {
+                if (this.IsDisposed)
+                {
+                    Debug.WriteLine("finish");
+                    this.Dispose();
+                    click = true;
+                }
                 Debug.WriteLine("x:" + x + " y:" + y);
 
                 //画面外に出そうな場合

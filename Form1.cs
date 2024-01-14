@@ -8,12 +8,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SS
 {
     public partial class Form1 : Form
     {
         string version = "v1.0\n2024年1月11日配布";
+
+        FontDialog fd;
+        Color color;
 
         //起動時
         public Form1()
@@ -33,9 +37,23 @@ namespace SS
         //起動ボタンを押した
         private void button1_Click(object sender, EventArgs e)
         {
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0:
+                    moveImageWindow();
+                    break;
+                    case 1:
+                    moveTimeWindow();
+                    break;
+            }
+
+
+        }
+
+        void moveImageWindow()
+        {
             //ウィンドウを作る
             Move move = new Move();
-
             try
             {
                 //入れられたパスから画像を作る
@@ -59,12 +77,54 @@ namespace SS
             }
             catch (Exception ex)
             {
+                move.Dispose();
                 //メッセージボックスを表示する
                 MessageBox.Show("正しいファイル場所を指定してください。", "こら！！！",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+        }
 
+        void moveTimeWindow()
+        {
+            //ウィンドウを作る
+            Time time = new Time();
+            try
+            {
+                DateTime.Now.ToString(textBox2.Text);
+                time.SetFormat(textBox2.Text);
+                if (fd != null&&color!=null)time.SetFont(fd.Font,color);
+                time.SetNum(comboBox2.SelectedIndex);
+                //最前面指定があればそうする
+                time.TopMost = checkBox_top.Checked;
+
+                //フォームを表示するディスプレイのScreenを取得する
+                Screen s = (Screen)this.comboBox3.SelectedItem;
+                Debug.WriteLine(s.Bounds.X + ":" + s.Bounds.Y);
+                //位置を左上にさせる
+                time.Top = s.Bounds.Y;
+                time.Left = s.Bounds.X;
+                //起動
+                time.Show();
+            }
+            catch (FormatException ex)
+            {
+                time.Dispose();
+                //日時フォーマットに違うものを入れた場合に呼ばれる
+                //メッセージボックスを表示する
+                MessageBox.Show("日時フォーマットが正しくありません！", "エラー",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                time.Dispose();
+                //とりあえず対応する
+                //メッセージボックスを表示する
+                MessageBox.Show("エラー\n"+ex, "？？？",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         //参考
@@ -142,12 +202,19 @@ namespace SS
 
         private void button3_Click(object sender, EventArgs e)
         {
-            using (FontDialog fd = new FontDialog())
+            if (fd == null)
             {
-                if (fd.ShowDialog() == DialogResult.OK)
-                {
-                    
-                }
+                fd = new FontDialog();
+            }
+            //横書きフォントだけを表示する
+            fd.AllowVerticalFonts = false;
+            fd.ShowColor = true;
+            
+
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                Debug.WriteLine("font:" + fd.Font);
+                color=fd.Color;
             }
         }
     }

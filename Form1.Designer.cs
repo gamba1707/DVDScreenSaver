@@ -49,6 +49,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.終了ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -87,6 +88,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 27);
             this.comboBox1.TabIndex = 2;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // button2
             // 
@@ -196,7 +198,8 @@
             // メニューToolStripMenuItem
             // 
             this.メニューToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ディスプレイ情報ToolStripMenuItem});
+            this.ディスプレイ情報ToolStripMenuItem,
+            this.終了ToolStripMenuItem});
             this.メニューToolStripMenuItem.Name = "メニューToolStripMenuItem";
             this.メニューToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.メニューToolStripMenuItem.Text = "メニュー";
@@ -204,7 +207,7 @@
             // ディスプレイ情報ToolStripMenuItem
             // 
             this.ディスプレイ情報ToolStripMenuItem.Name = "ディスプレイ情報ToolStripMenuItem";
-            this.ディスプレイ情報ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.ディスプレイ情報ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.ディスプレイ情報ToolStripMenuItem.Text = "ディスプレイ情報";
             this.ディスプレイ情報ToolStripMenuItem.Click += new System.EventHandler(this.ディスプレイ情報ToolStripMenuItem_Click);
             // 
@@ -277,6 +280,13 @@
             this.textBox2.TabIndex = 15;
             this.textBox2.Text = "HH時mm分ss秒";
             // 
+            // 終了ToolStripMenuItem
+            // 
+            this.終了ToolStripMenuItem.Name = "終了ToolStripMenuItem";
+            this.終了ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.終了ToolStripMenuItem.Text = "終了(&X)";
+            this.終了ToolStripMenuItem.Click += new System.EventHandler(this.終了ToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -335,6 +345,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.ToolStripMenuItem 終了ToolStripMenuItem;
     }
 }
 

@@ -46,20 +46,23 @@ namespace SS
         {
             InitializeComponent();
             init();
-            MoveWin();
+            
         }
 
         async void init()
         {
-            //現在の位置を左上として保管
-            screen_x = Left;
-            screen_y = Top;
+            //エラーになるのでちょっと待つ
+            await Task.Delay(5);
             //位置にも代入
             x = screen_x;
             y = screen_y;
+
             //ディスプレイの大きさを代入
             screen_h = System.Windows.Forms.Screen.GetWorkingArea(this).Height;
             screen_w = System.Windows.Forms.Screen.GetWorkingArea(this).Width;
+            MoveWin();
+
+            //時刻を適応していく（誤差10ミリ秒）
             while (true)
             {
                 label1.Text = DateTime.Now.ToString(format);
@@ -67,24 +70,35 @@ namespace SS
             }
         }
 
+        public void SetScreen(int x,int y)
+        {
+            screen_x = x;
+            screen_y = y;
+        }
+
 
         public void SetFont(Font f,Color color)
         {
+            //フォントを設定
             label1.Font = f;
-            label1.ForeColor = color;
-            
+            //白黒にする以外は選択された色にする
+            if(num!=1)label1.ForeColor = color;
+            //ウィンドウの大きさを適切な値にする
             Width = (int)((label1.Size.Width + 35 * f.Size* DateTime.Now.ToString(format).Length) * 0.03);
             Height = (int)((label1.Size.Height + 55) * f.Size * 0.03);
 
+            //小さすぎる場合はこの値にする
             if (Width < 130) Width = 130;
             if (Height < 70) Height = 70;
         }
 
+        //日時のフォーマットを設定する
         public void SetFormat(string s)
         {
             format = s;
         }
 
+        //エフェクトの値を控える
         public void SetNum(int a)
         {
             num=a;
@@ -165,7 +179,6 @@ namespace SS
             t = new Timer();
             //10ミリ秒指定
             t.Interval = 10;
-            Debug.WriteLine("きｒｔ");
             //複数入ってこないようにする
             inte_rnd_time = true;
 

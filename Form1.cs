@@ -14,7 +14,7 @@ namespace SS
 {
     public partial class Form1 : Form
     {
-        string version = "v1.0\n2024年1月11日配布";
+        string version = "v1.0\n2024年1月15日配布";
 
         FontDialog fd;
         Color color;
@@ -34,6 +34,39 @@ namespace SS
             this.comboBox3.DataSource = Screen.AllScreens;
         }
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Debug.WriteLine("変更されました");
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0:
+                    //画像パス
+                    label3.Visible = true;
+                    textBox1.Visible = true;
+                    button2.Visible = true;
+                    //文字の設定
+                    label6.Visible = false;
+                    button3.Visible = false;
+                    //日時フォーマット
+                    label7.Visible = false;
+                    textBox2.Visible = false;
+                    break;
+                case 1:
+                    //画像パス
+                    label3.Visible = false;
+                    textBox1.Visible = false;
+                    button2.Visible = false;
+                    //文字の設定
+                    label6.Visible = true;
+                    button3.Visible = true;
+                    //日時フォーマット
+                    label7.Visible = true;
+                    textBox2.Visible = true;
+                    break;
+            }
+
+        }
+
         //起動ボタンを押した
         private void button1_Click(object sender, EventArgs e)
         {
@@ -42,12 +75,10 @@ namespace SS
                 case 0:
                     moveImageWindow();
                     break;
-                    case 1:
+                case 1:
                     moveTimeWindow();
                     break;
             }
-
-
         }
 
         void moveImageWindow()
@@ -91,10 +122,16 @@ namespace SS
             Time time = new Time();
             try
             {
+                //一旦呼び出してみてエラーを確認する
                 DateTime.Now.ToString(textBox2.Text);
-                time.SetFormat(textBox2.Text);
-                if (fd != null&&color!=null)time.SetFont(fd.Font,color);
+
+                //エフェクトを適応する
                 time.SetNum(comboBox2.SelectedIndex);
+                //日時フォーマットを設定する
+                time.SetFormat(textBox2.Text);
+                //フォントを設定されていて、色もあれば適応する
+                if (fd != null && color != null) time.SetFont(fd.Font, color);
+                
                 //最前面指定があればそうする
                 time.TopMost = checkBox_top.Checked;
 
@@ -102,13 +139,13 @@ namespace SS
                 Screen s = (Screen)this.comboBox3.SelectedItem;
                 Debug.WriteLine(s.Bounds.X + ":" + s.Bounds.Y);
                 //位置を左上にさせる
-                time.Top = s.Bounds.Y;
-                time.Left = s.Bounds.X;
+                time.SetScreen(s.Bounds.X , s.Bounds.Y);
                 //起動
                 time.Show();
             }
             catch (FormatException ex)
             {
+                //手放す
                 time.Dispose();
                 //日時フォーマットに違うものを入れた場合に呼ばれる
                 //メッセージボックスを表示する
@@ -121,7 +158,7 @@ namespace SS
                 time.Dispose();
                 //とりあえず対応する
                 //メッセージボックスを表示する
-                MessageBox.Show("エラー\n"+ex, "？？？",
+                MessageBox.Show("エラー\n" + ex, "？？？",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -209,13 +246,19 @@ namespace SS
             //横書きフォントだけを表示する
             fd.AllowVerticalFonts = false;
             fd.ShowColor = true;
-            
+
 
             if (fd.ShowDialog() == DialogResult.OK)
             {
                 Debug.WriteLine("font:" + fd.Font);
-                color=fd.Color;
+                color = fd.Color;
             }
+        }
+
+        private void 終了ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //アプリケーションを終了する
+            Application.Exit();
         }
     }
 }

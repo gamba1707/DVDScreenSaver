@@ -14,6 +14,9 @@ namespace SS
 {
     public partial class Time : Form
     {
+        //移動速度
+        float speed=1f;
+
         //クリックしたか
         bool click;
 
@@ -57,9 +60,9 @@ namespace SS
             x = screen_x;
             y = screen_y;
 
-            //ディスプレイの大きさを代入
-            screen_h = System.Windows.Forms.Screen.GetWorkingArea(this).Height;
-            screen_w = System.Windows.Forms.Screen.GetWorkingArea(this).Width;
+            //移動速度を適応
+            x_inc *= speed; y_inc*=speed;
+
             MoveWin();
 
             //時刻を適応していく（誤差10ミリ秒）
@@ -70,10 +73,19 @@ namespace SS
             }
         }
 
-        public void SetScreen(int x,int y)
+        public void SetScreen(Screen s)
         {
-            screen_x = x;
-            screen_y = y;
+            screen_x = s.Bounds.X;
+            screen_y = s.Bounds.Y;
+
+            //ディスプレイの大きさを代入
+            screen_h = s.WorkingArea.Height;
+            screen_w =s.WorkingArea.Width;
+        }
+
+        public void SetSpeed(float x)
+        {
+            speed = x;
         }
 
 
@@ -261,6 +273,7 @@ namespace SS
                 Debug.WriteLine("画面の大きさ:" + screen.Bounds.X + "x" + screen.Bounds.Y);
                 screen_x = screen.Bounds.X;
                 screen_y = screen.Bounds.Y;
+
 
                 //動かす
                 MoveWin();

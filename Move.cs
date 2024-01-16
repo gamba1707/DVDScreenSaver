@@ -17,6 +17,9 @@ namespace SS
 {
     public partial class Move : Form
     {
+        //移動速度
+        float speed = 1f;
+
         //クリックしたか
         bool click;
 
@@ -63,12 +66,13 @@ namespace SS
         {
             //エラーになるのでちょっと待つ
             await Task.Delay(5);
-            //現在の位置を左上として保管
-            screen_x = Left;
-            screen_y = Top;
             //位置にも代入
             x = screen_x;
             y = screen_y;
+
+
+            //移動速度を適応
+            x_inc *= speed; y_inc *= speed;
 
             //画像を反映
             pictureBox.Image = bitmap;
@@ -78,15 +82,17 @@ namespace SS
             MoveWin();
         }
 
+        public void SetSpeed(float x)
+        {
+            speed = x;
+        }
+
         //ウィンドウサイズを指定できる
         public void WindowSize(int w, int h)
         {
             //ウィンドウサイズを代入（タイトルバーの影響かサイズを少し足す）
             this.Width = w + 10;
             this.Height = h + 42;
-            //ディスプレイの大きさを代入
-            screen_h = System.Windows.Forms.Screen.GetWorkingArea(this).Height;
-            screen_w = System.Windows.Forms.Screen.GetWorkingArea(this).Width;
 
             //もし入れたウィンドウサイズが大きすぎる場合は縮小する（画面の65％未満に）
             while (this.Width / screen_w >= 0.65f)
@@ -99,6 +105,16 @@ namespace SS
                 this.Height /= 2;
                 this.Width /= 2;
             }
+        }
+
+        public void SetScreen(Screen s)
+        {
+            screen_x = s.Bounds.X;
+            screen_y = s.Bounds.Y;
+
+            //ディスプレイの大きさを代入
+            screen_h = s.WorkingArea.Height;
+            screen_w = s.WorkingArea.Width;
         }
 
         //画像を反映させる

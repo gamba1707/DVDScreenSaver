@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace SS
 {
@@ -32,6 +33,9 @@ namespace SS
             //デバイス名が表示されるようにする
             this.comboBox3.DisplayMember = "DeviceName";
             this.comboBox3.DataSource = Screen.AllScreens;
+
+            trackBar1.Value = 10;
+            speedText.Text = trackBar1.Value * 0.1 + "倍";
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -87,6 +91,13 @@ namespace SS
             Move move = new Move();
             try
             {
+                //フォームを表示するディスプレイのScreenを取得する
+                Screen s = (Screen)this.comboBox3.SelectedItem;
+                Debug.WriteLine(s.Bounds.X + ":" + s.Bounds.Y);
+                //位置を左上にさせる
+                move.SetScreen(s);
+                //移動速度適応
+                move.SetSpeed((float)(trackBar1.Value * 0.1));
                 //入れられたパスから画像を作る
                 var bmp = new Bitmap(this.textBox1.Text);
                 Debug.WriteLine(String.Format("水平分解能 = {0}, 垂直分解能 = {1}", bmp.Height, bmp.Width));
@@ -97,16 +108,10 @@ namespace SS
                 //最前面指定があればそうする
                 move.TopMost = checkBox_top.Checked;
 
-                //フォームを表示するディスプレイのScreenを取得する
-                Screen s = (Screen)this.comboBox3.SelectedItem;
-                Debug.WriteLine(s.Bounds.X + ":" + s.Bounds.Y);
-                //位置を左上にさせる
-                move.Top = s.Bounds.Y;
-                move.Left = s.Bounds.X;
                 //起動
                 move.Show();
             }
-            catch (Exception ex)
+            catch (System.ArgumentException ex)
             {
                 move.Dispose();
                 //メッセージボックスを表示する
@@ -114,6 +119,16 @@ namespace SS
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+            catch (Exception ex)
+            {
+                move.Dispose();
+                //とりあえず対応する
+                //メッセージボックスを表示する
+                MessageBox.Show("エラー\n" + ex, "？？？",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
         }
 
         void moveTimeWindow()
@@ -125,13 +140,15 @@ namespace SS
                 //一旦呼び出してみてエラーを確認する
                 DateTime.Now.ToString(textBox2.Text);
 
+                //移動速度適応
+                time.SetSpeed((float)(trackBar1.Value * 0.1));
                 //エフェクトを適応する
                 time.SetNum(comboBox2.SelectedIndex);
                 //日時フォーマットを設定する
                 time.SetFormat(textBox2.Text);
                 //フォントを設定されていて、色もあれば適応する
                 if (fd != null && color != null) time.SetFont(fd.Font, color);
-                
+
                 //最前面指定があればそうする
                 time.TopMost = checkBox_top.Checked;
 
@@ -139,7 +156,7 @@ namespace SS
                 Screen s = (Screen)this.comboBox3.SelectedItem;
                 Debug.WriteLine(s.Bounds.X + ":" + s.Bounds.Y);
                 //位置を左上にさせる
-                time.SetScreen(s.Bounds.X , s.Bounds.Y);
+                time.SetScreen(s);
                 //起動
                 time.Show();
             }
@@ -259,6 +276,11 @@ namespace SS
         {
             //アプリケーションを終了する
             Application.Exit();
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            speedText.Text = trackBar1.Value * 0.1 + "倍";
         }
     }
 }

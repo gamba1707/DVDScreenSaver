@@ -15,7 +15,7 @@ namespace SS
 {
     public partial class Form1 : Form
     {
-        string version = "v1.0\n2024年1月15日配布";
+        string version = "v1.0.1\n2024年1月20日配布";
 
         FontDialog fd;
         Color color;
@@ -193,7 +193,7 @@ namespace SS
                 //初期フォルダ(マイピクチャ)
                 dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
                 //Jpgファイルをpngファイル以外のファイルをダイアログに表示しない
-                dlg.Filter = "画像ファイル(*.jpg;*.png;*.bmp;*.gif)|*.jpg;*.png;*.bmp;*.gif";
+                dlg.Filter = "画像ファイル(*.jpg;*.png;*.bmp)|*.jpg;*.png;*.bmp";
                 dlg.FilterIndex = 1;                //Filterの1つめ画像ファイルを指定
                 dlg.Title = "画像ファイル指定";     //タイトルを設定する
                 dlg.RestoreDirectory = true;        //カレントディレクトリ復元

@@ -90,21 +90,28 @@ namespace SS
         //ウィンドウサイズを指定できる
         public void WindowSize(int w, int h)
         {
-            //ウィンドウサイズを代入（タイトルバーの影響かサイズを少し足す）
-            this.Width = w + 10;
-            this.Height = h + 42;
-
+            //仮置きで入れておく
+            int width = w + 10;
+            int height = h + 10;
+            
+            Debug.WriteLine("リサイズ前：" + width + ":" + height);
             //もし入れたウィンドウサイズが大きすぎる場合は縮小する（画面の65％未満に）
-            while (this.Width / screen_w >= 0.65f)
+            while (width / screen_w >= 0.65f)
             {
-                this.Width /= 2;
-                this.Height /= 2;
+                width /= 2;
+                height /= 2;
+                Debug.WriteLine("リサイズ：" + width + ":" + height);
             }
-            while (this.Height / screen_h >= 0.65f)
+            while (height / screen_h >= 0.65f)
             {
-                this.Height /= 2;
-                this.Width /= 2;
+                width /= 2;
+                height /= 2;
+                Debug.WriteLine("リサイズ：" + width + ":" + height);
             }
+
+            //大きさを割り当てる
+            this.Width = width;
+            this.Height = height;
         }
 
         public void SetScreen(Screen s)
